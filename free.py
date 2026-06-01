@@ -13,7 +13,6 @@ SPI_SETDESKWALLPAPER = 20
 SPIF_UPDATEINIFILE = 1
 SPIF_SENDCHANGE = 2
 
-
 while True:
   ret, frame = pr3_cap.read()
   if ret:
@@ -44,8 +43,8 @@ while True:
       points = np.array([0, 0], dtype=np.int32)
       cv2.putText(sleep_track, f"{datetime.datetime.now()}", (10, 60),
                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-      cv2.imwrite("WriteImage/sleep_face.jpg", sleep_track)
-      path = os.path.abspath("WriteImage/sleep_face.jpg")
+      cv2.imwrite("sleep_face.jpg", sleep_track)
+      path = os.path.abspath("sleep_face.jpg")
       ctypes.windll.user32.SystemParametersInfoW(
           SPI_SETDESKWALLPAPER, 0, path, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE)
     cv2.imshow("Tracking", frame_track)
