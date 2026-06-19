@@ -4,6 +4,7 @@ import numpy as np
 import datetime
 import ctypes
 import os
+from playsound3 import playsound
 
 model = YOLO("yolo11n-pose.pt")
 pr3_cap = cv2.VideoCapture(0)
@@ -52,6 +53,7 @@ while True:
             flag = False
     frame_track = results[0].plot()
     if flag:
+      sound = playsound("sound.mp3", block=False)
       # 矢印
       cv2.arrowedLine(frame_track, (int(nose[0]), max(int(
           nose[1]) - 400, 0)), (int(nose[0]), max(int(nose[1]) - 200, 0)), (0, 0, 255), thickness=10)
@@ -68,8 +70,10 @@ while True:
       path = os.path.abspath("sleep_face.jpg")
       ctypes.windll.user32.SystemParametersInfoW(
           SPI_SETDESKWALLPAPER, 0, path, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE)
+    else: sound.stop()
     cv2.imshow("Tracking", frame_track)
     if cv2.waitKey(1) == ord('q'):
+      sound.stop()
       break
   else:
     print("映像未出力")
