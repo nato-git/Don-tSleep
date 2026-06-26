@@ -10,6 +10,8 @@ model = YOLO("yolo11n-pose.pt")
 pr3_cap = cv2.VideoCapture(0)
 # 寝ているかどうかのフラグ
 flag = False
+# 音楽がなっているかのフラグ
+flag_sound = False
 
 # 壁紙を変更するためのパス
 path = ""
@@ -53,7 +55,9 @@ while True:
             flag = False
     frame_track = results[0].plot()
     if flag:
-      sound = playsound("sound.mp3", block=False)
+      if flag_sound is not True:
+        sound = playsound("sound.mp3", block=False)
+        flag_sound = True
       # 矢印
       cv2.arrowedLine(frame_track, (int(nose[0]), max(int(
           nose[1]) - 400, 0)), (int(nose[0]), max(int(nose[1]) - 200, 0)), (0, 0, 255), thickness=10)
@@ -70,10 +74,15 @@ while True:
       path = os.path.abspath("sleep_face.jpg")
       ctypes.windll.user32.SystemParametersInfoW(
           SPI_SETDESKWALLPAPER, 0, path, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE)
-    else: sound.stop()
+    else:
+      if flag_sound:
+        sound.stop()
+        flag_sound = False
     cv2.imshow("Tracking", frame_track)
     if cv2.waitKey(1) == ord('q'):
-      sound.stop()
+      if flag_sound:
+        sound.stop()
+        flag_sound = False
       break
   else:
     print("映像未出力")
